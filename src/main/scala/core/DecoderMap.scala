@@ -1,4 +1,4 @@
-package core_
+package core
 
 import chisel3._
 import chisel3.util._
@@ -16,6 +16,7 @@ object InstType{
     val J   = 7.U(4.W)
 
     val SYS = 8.U(4.W)
+    val FENCE = 8.U(4.W)
 }
 
 object DecoderTable {
@@ -152,7 +153,7 @@ object Insts { // idea from mini riscv
 }
 
 object OptCode{
-    val ADD = 0.U(5.W)
+  val ADD = 0.U(5.W)
   val SUB = 1.U(5.W)
   val SLT = 2.U(5.W)
   val SLTU = 3.U(5.W)

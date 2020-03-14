@@ -8,3 +8,7 @@ object PCConst{
     val NOP_INST = "h_8000_0013".U(32.W)
 }   
 
+object Const{
+    val IllegalInst     = 0.U
+    val InstAddressMis  = 1.U
+}

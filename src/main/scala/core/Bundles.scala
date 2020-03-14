@@ -80,6 +80,6 @@ class WrCSROp extends Bundle{
 //id 2 csr
 class ID_CSR extends Bundle {
   val addr      =   Output(UInt(12.W))
-  val rdata     =   Input(UInt(32.W))
+  val data     =   Input(UInt(32.W))
   val pr        =   Input(UInt(2.W))
 }
