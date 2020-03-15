@@ -29,7 +29,7 @@ class ID extends Module{
     //when id  is stalling, this cycle does not executed instruction
     //so , on the next cycle ,id has same instruction.
     //and ,if get a nop_inst when it sees  stall
-    //id will not undata itself
+    //id will not updata itself
 
     val stall   =   Wire(Bool())
     val flush   =   io.flush
@@ -154,6 +154,43 @@ class ID extends Module{
                 io.ex.aluOp.rd2 :=  imm.asUInt
                 io.ex.store_data:=  rs2Data
             }
+            is(InstType.B){
+                imm := Cat( inst(31), inst(7), inst(30,25), inst(11,8), 0.U(1.W)).asSInt
+                val btType  =   decodeRes(DecoderTable.OPT)
+                //btType(0) judge if it is unsingle
+                val less    =   Mux(btType(0), rs1Data < rs2Data, rs1Data.asSInt < rs2Data.asSInt)
+                val greater =   Mux(btType(0), rs1Data > rs2Data, rs1Data.asSInt > rs2Data.asSInt)
+                val equle   =   rs1Data === rs2Data
+                //3= 2> 1<
+                val jump    =   (less & btType(3)) | (greater & btType(2)) | (equle & btType(1))
+                when(jump){
+                    checkAndJump(pc + imm.asUInt)
+                }
+            }
+            is(InstType.U){
+                imm                 :=  (inst &"h_fffff000".U).asSInt //load  inst(31:12)
+                io.ex.aluOp.rd1     :=  imm.asUInt
+                val uType           =  decodeRes(DecoderTable.OPT)
+                //uTpye(0)==0 lui uTpye(0)==1 auipc
+                io.ex.aluOp.rd2     :=  Mux(uType(0), pc, 0.U)
+                io.ex.aluOp.op      :=  OptCode.ADD
+                io.ex.wrRegOp.addr  :=   rd
+            }
+            //jal
+            is(InstType.J){
+                imm :=  Cat(inst(31), inst(19,12), inst(20), inst(30,21), 0.U(1.W)).asSInt
+                checkAndJump(pc + imm.asUInt)
+                io.ex.aluOp.rd1 :=  pc
+                io.ex.aluOp.rd2 :=  4.U
+                io.ex.aluOp.op  :=  OptCode.ADD
+                io.ex.wrRegOp.addr  :=  rd
+            }
+            is(InstType.SYS){
+
+            }
+            is(InstType.FENCE){
+
+            }
             is(InstType.BAD) {
                 when(!except.valid) {
                 io.ex.except.valid := true.B
@@ -161,6 +198,8 @@ class ID extends Module{
                 io.ex.except.code  := Const.IllegalInst
                 }
             }
+            
+
         }
     }
 

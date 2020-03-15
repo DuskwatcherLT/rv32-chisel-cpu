@@ -186,13 +186,13 @@ object OptCode{
   val SB = "b10110".U
 }
 object BType {
-  //          0 < = > SInt?
-  val BEQ = "b0_0100".U
-  val BNE = "b0_1010".U
-  val BLT = "b0_1000".U
-  val BGE = "b0_0110".U
-  val BLTU ="b0_1001".U
-  val BGEU ="b0_0111".U
+  //         0  <=>SInt?
+  val BEQ = "b0_0100".U   // =
+  val BNE = "b0_1010".U   // !=
+  val BLT = "b0_1000".U   // <
+  val BGE = "b0_0110".U   // =>
+  val BLTU ="b0_1001".U   // < 
+  val BGEU ="b0_0111".U   // =>
 }
 
 object UType {
