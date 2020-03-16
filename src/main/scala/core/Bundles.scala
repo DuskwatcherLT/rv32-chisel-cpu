@@ -83,3 +83,13 @@ class ID_CSR extends Bundle {
   val data     =   Input(UInt(32.W))
   val pr        =   Input(UInt(2.W))
 }
+
+//EX 2 MEM
+class EX_MEM extends Bundle {
+    val ram     =   Output(new RAMOutPut)
+    val wrRegOp =   Output(new WrRegOp)
+    val wrCSROp =   Output(new WrCSROp)
+    val except  =   new Exception_Bus
+
+    val ready   =   Input(Bool())
+}
